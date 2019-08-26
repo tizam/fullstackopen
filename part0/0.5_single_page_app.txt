@@ -1,0 +1,21 @@
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+
+note over server:
+generate some HTML code 
+end note
+server->browser: HTML code - wihtout data
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server->browser: main.css
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+note over server:
+server execute Javascript code
+fetchs the notes from server 
+adds HTML code to display the notes 
+end note
+server->browser: spa.js
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server->browser: [{"content":"HTML is easy","date":"2019-05-23T17:30:31.098Z"}, ...]
