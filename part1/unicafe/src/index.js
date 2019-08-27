@@ -20,13 +20,18 @@ const App = () => {
     return good / (good + neutral + bad);
   };
 
+  const handleGood = () => setGood(good + 1);
+  const handleNeutral = () => setNeutral(neutral + 1);
+  const handleBad = () => setBad(bad + 1);
+
   return (
     <div>
       <h1>Give feedback</h1>
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Button onClick={handleGood} text="good" />
+      <Button onClick={handleNeutral} text="neutral" />
+      <Button onClick={handleBad} text="bad" />
       <h2>statistics</h2>
+
       <Statistics
         good={good}
         neutral={neutral}
@@ -43,15 +48,39 @@ const Statistics = ({ good, neutral, bad, calcAverage, calcPositive }) => {
     return "No feedback given";
   }
   return (
-    <div>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <p>average {calcAverage()}</p>
-      <p>positive {calcPositive()} %</p>
-    </div>
+    <table>
+      <tbody>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <tr>
+          <td>all</td>
+          <td>{good + neutral + bad}</td>
+        </tr>
+        <tr>
+          <td>average</td>
+          <td>{calcAverage()}</td>
+        </tr>
+        <tr>
+          <td>positive</td>
+          <td>{calcPositive()} %</td>
+        </tr>
+      </tbody>
+    </table>
   );
+};
+
+const Statistic = ({ text, value }) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  );
+};
+
+const Button = ({ onClick, text }) => {
+  return <button onClick={onClick}>{text}</button>;
 };
 
 ReactDOM.render(<App />, document.getElementById("root"));
