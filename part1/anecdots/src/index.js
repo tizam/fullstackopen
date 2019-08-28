@@ -5,8 +5,6 @@ const App = props => {
   const [selected, setSelected] = useState(0);
   const [vote, setVote] = useState(Array(props.anecdotes.length).fill(0));
 
-  console.log(vote);
-
   const handleNext = () => {
     setSelected(Math.floor(Math.random() * props.anecdotes.length));
   };
@@ -33,7 +31,7 @@ const App = props => {
       <p>has {vote[selected]} votes</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleNext}>next anecdote</button>
-      <h>Anecdote with most votes</h>
+      <h1>Anecdote with most votes</h1>
       <div>{mostVoted(vote, props.anecdotes)}</div>
     </div>
   );
