@@ -3,16 +3,23 @@ import ReactDOM from "react-dom";
 
 const App = props => {
   const [selected, setSelected] = useState(0);
+  const [vote, setVote] = useState(props.vote);
 
-  const handleClick = () => {
+  const handleNext = () => {
     setSelected(Math.floor(Math.random() * props.anecdotes.length));
   };
 
-  console.log(selected);
+  const handleVote = () => {
+    setVote([...vote, (props.vote[selected] = props.vote[selected] + 1)]);
+  };
+
+  console.log(props.vote);
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
-      <button onClick={handleClick}>next anecdote</button>
+      <p>has {props.vote[selected]} votes</p>
+      <button onClick={handleVote}>vote</button>
+      <button onClick={handleNext}>next anecdote</button>
     </div>
   );
 };
@@ -26,4 +33,9 @@ const anecdotes = [
   "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it."
 ];
 
-ReactDOM.render(<App anecdotes={anecdotes} />, document.getElementById("root"));
+const vote = Array(anecdotes.length).fill(0);
+
+ReactDOM.render(
+  <App anecdotes={anecdotes} vote={vote} />,
+  document.getElementById("root")
+);
