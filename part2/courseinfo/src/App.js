@@ -2,10 +2,12 @@ import React from "react";
 
 import Course from "./components/Course";
 
-const App = props => {
+const App = ({ courses }) => {
   return (
     <>
-      <Course course={props.course} />
+      {courses.map(course => (
+        <Course key={course.id} course={course} />
+      ))}
     </>
   );
 };
