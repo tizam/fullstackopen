@@ -17,6 +17,10 @@ const course = {
     {
       name: "State of component",
       exercises: 14
+    },
+    {
+      name: "Redux",
+      exercises: 11
     }
   ]
 };
