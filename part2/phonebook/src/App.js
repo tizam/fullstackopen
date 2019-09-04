@@ -10,7 +10,26 @@ function App() {
 
   const addPersonas = event => {
     event.preventDefault();
-    setPersonas([...personas, { name: newName }]);
+
+    const duplicate = personas.find(persona => {
+      return persona.name === newName;
+    });
+
+    if (newName === "") {
+      return;
+    }
+
+    if (duplicate) {
+      alert(`${newName} is already added to phonebook`);
+      setNewName("");
+    } else {
+      console.log("false");
+      setPersonas([...personas, { name: newName }]);
+      setNewName("");
+    }
+
+    console.log("personas: ", personas);
+    console.log(typeof personas);
   };
 
   return (
