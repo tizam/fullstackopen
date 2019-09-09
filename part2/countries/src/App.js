@@ -30,22 +30,18 @@ function App() {
     } else if (filteredCountries.length <= 1) {
       return filteredCountries.map(country => (
         <div key={country.callingCodes}>
-          <h3>{country.name}</h3>
-          <p>{country.capital}</p>
-          <div>
-            {country.population}
-            <p>{country.capital}</p>
-            <p>{country.population}</p>
-            <h4>languages</h4>
-            <ul>
-              {country.languages.map(language => (
-                <li key={language.iso639_1}>{language.name}</li>
-              ))}
-            </ul>
-            <p>
-              <img src={country.flag} alt={country.name} />
-            </p>
-          </div>
+          <h2>{country.name}</h2>
+          <p>capital {country.capital}</p>
+          <p>population {country.population}</p>
+          <h4>languages</h4>
+          <ul>
+            {country.languages.map(language => (
+              <li key={language.iso639_1}>{language.name}</li>
+            ))}
+          </ul>
+          <p>
+            <img src={country.flag} alt={country.name} />
+          </p>
         </div>
       ));
     }
