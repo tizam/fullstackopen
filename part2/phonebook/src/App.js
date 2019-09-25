@@ -46,6 +46,10 @@ function App() {
       setNewName("");
     } else {
       setPersonas([...personas, { name: newName, number: newNumber }]);
+      axios.post("http://localhost:3001/persons", {
+        name: newName,
+        number: newNumber
+      });
       setNewName("");
       setNewNumber("");
     }
