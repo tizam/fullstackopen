@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
+import phoneService from "./services/person";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
@@ -12,10 +13,7 @@ function App() {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response => {
-      //console.log(response);
-      setPersonas(response.data);
-    });
+    phoneService.getAll().then(response => setPersonas(response.data));
   }, []);
 
   const handleNameChange = event => {
@@ -46,10 +44,7 @@ function App() {
       setNewName("");
     } else {
       setPersonas([...personas, { name: newName, number: newNumber }]);
-      axios.post("http://localhost:3001/persons", {
-        name: newName,
-        number: newNumber
-      });
+      phoneService.create({ name: newName, number: newNumber });
       setNewName("");
       setNewNumber("");
     }
