@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import phoneService from "./services/person";
 
@@ -50,6 +51,29 @@ function App() {
     }
   };
 
+  const handleDelete = person => {
+    console.log(person);
+    if (window.confirm(`delete ${person.name} ?`)) {
+      const removedPersonas = personas.filter(
+        persona => persona.id !== person.id
+      );
+      setPersonas(removedPersonas);
+      phoneService.remove(person.id).then(() => {
+        console.log(`${person.name} is removed`);
+      });
+      // const removedPersonas = personas.filter(persona => {
+      //   return persona.id !== person.id;
+      // });
+      // setPersonas(removedPersonas);
+      // axios
+      //   .delete(`http://localhost:3001/persons/${person.id}`)
+      //   .then(() => {
+      //     console.log(`${person.id} deleted`);
+      //   })
+      //   .catch(err => console.log(err));
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -65,7 +89,11 @@ function App() {
 
       <h2>Numbers</h2>
       <hr />
-      <Persons personas={personas} filter={filter} />
+      <Persons
+        personas={personas}
+        filter={filter}
+        deletePersona={handleDelete}
+      />
     </div>
   );
 }
