@@ -1,101 +1,110 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
-import phoneService from "./services/person";
+import phoneServices from "./services/persons";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
-import Persons from "./components/Persons";
+import Person from "./components/Person";
 
-function App() {
-  const [personas, setPersonas] = useState([]);
+const App = () => {
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
+  // fetch data from server
   useEffect(() => {
-    phoneService.getAll().then(response => setPersonas(response.data));
+    phoneServices
+      .getAll()
+      .then(data => setPersons(data))
+      .catch(err => console.log(err));
   }, []);
 
-  const handleNameChange = event => {
-    setNewName(event.target.value);
+  // handle changes
+  const handleInputName = e => {
+    setNewName(e.target.value);
   };
 
-  const handleNumberChange = event => {
-    setNewNumber(event.target.value);
+  const handleInputNumber = e => {
+    setNewNumber(e.target.value);
   };
 
-  const handleFilter = event => {
-    setFilter(event.target.value.toLowerCase());
+  const handleFilter = e => {
+    setFilter(e.target.value.toLowerCase());
   };
 
-  const addPersonas = event => {
-    event.preventDefault();
+  // handle submit
+  const handleSubmit = e => {
+    e.preventDefault();
 
-    const duplicate = personas.find(persona => {
-      return persona.name === newName;
-    });
-
+    // check if input is submited empty
     if (newName === "") {
       return;
     }
 
+    // check if the added person exists in db
+    const duplicate = persons.find(person => person.name === newName);
     if (duplicate) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
+      const confirm = window.confirm(
+        `${duplicate.name} is already added to the phonebook, replace the old number with the new one ?`
+      );
+      if (confirm) {
+        const updatedPerson = { ...duplicate, number: newNumber };
+        phoneServices
+          .updatePerson(duplicate.id, updatedPerson)
+          .then(() => {
+            setPersons(
+              // check each person
+              // if the id of the person is equal to the id of the duplicate then update
+              // if not, do nothing
+              persons.map(p => (p.id !== duplicate.id ? p : updatedPerson))
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(err => console.log(err));
+      }
     } else {
-      setPersonas([...personas, { name: newName, number: newNumber }]);
-      phoneService.create({ name: newName, number: newNumber });
+      // add new person to db
+      const newPerson = { name: newName, number: newNumber };
+      phoneServices
+        .addPerson(newPerson)
+        .then(res => {
+          setPersons([...persons, res]);
+        })
+        .catch(err => console.log(err));
       setNewName("");
       setNewNumber("");
     }
   };
 
   const handleDelete = person => {
-    console.log(person);
-    if (window.confirm(`delete ${person.name} ?`)) {
-      const removedPersonas = personas.filter(
-        persona => persona.id !== person.id
-      );
-      setPersonas(removedPersonas);
-      phoneService.remove(person.id).then(() => {
-        console.log(`${person.name} is removed`);
-      });
-      // const removedPersonas = personas.filter(persona => {
-      //   return persona.id !== person.id;
-      // });
-      // setPersonas(removedPersonas);
-      // axios
-      //   .delete(`http://localhost:3001/persons/${person.id}`)
-      //   .then(() => {
-      //     console.log(`${person.id} deleted`);
-      //   })
-      //   .catch(err => console.log(err));
+    const personsAfterDelete = persons.filter(p => p.id !== person.id);
+    const confirm = window.confirm(`delete ${person.name} ?`);
+    if (confirm) {
+      setPersons(personsAfterDelete);
+      phoneServices.removePerson(person.id).catch(err => console.log(err));
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter handleFilter={handleFilter} />
+      <Filter filter={filter} handleFilter={handleFilter} />
       <h2>Add New</h2>
       <PersonForm
-        addPersonas={addPersonas}
+        handleSubmit={handleSubmit}
+        handleInputName={handleInputName}
+        handleInputNumber={handleInputNumber}
         newName={newName}
-        handleNameChange={handleNameChange}
         newNumber={newNumber}
-        handleNumberChange={handleNumberChange}
       />
-
       <h2>Numbers</h2>
-      <hr />
-      <Persons
-        personas={personas}
-        filter={filter}
-        deletePersona={handleDelete}
-      />
+      <ul>
+        <Person persons={persons} filter={filter} handleDelete={handleDelete} />
+      </ul>
     </div>
   );
-}
+};
 
 export default App;

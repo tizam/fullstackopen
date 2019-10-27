@@ -1,3 +1,39 @@
 {
-  "persons": []
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "39-82-5323523",
+      "id": 1
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": 2
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": 3
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 4
+    },
+    {
+      "name": "Ladoui Abdellah",
+      "number": "11-32-3718299",
+      "id": 5
+    },
+    {
+      "name": "aze",
+      "number": "12",
+      "id": 6
+    },
+    {
+      "name": "sqd",
+      "number": "11111",
+      "id": 7
+    }
+  ]
 }
