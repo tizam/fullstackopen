@@ -5,12 +5,14 @@ import phoneServices from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null);
 
   // fetch data from server
   useEffect(() => {
@@ -52,13 +54,17 @@ const App = () => {
         const updatedPerson = { ...duplicate, number: newNumber };
         phoneServices
           .updatePerson(duplicate.id, updatedPerson)
-          .then(() => {
+          .then(res => {
             setPersons(
               // check each person
               // if the id of the person is equal to the id of the duplicate then update
               // if not, do nothing
               persons.map(p => (p.id !== duplicate.id ? p : updatedPerson))
             );
+            setMessage(`Updated ${res.name}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
             setNewName("");
             setNewNumber("");
           })
@@ -71,6 +77,10 @@ const App = () => {
         .addPerson(newPerson)
         .then(res => {
           setPersons([...persons, res]);
+          setMessage(`Added ${res.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
         })
         .catch(err => console.log(err));
       setNewName("");
@@ -90,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} handleFilter={handleFilter} />
       <h2>Add New</h2>
       <PersonForm
