@@ -1,6 +1,13 @@
-.message {
+.success {
   background-color: green;
   color: #fff;
   padding: 10px;
   border: 2px solid rgb(206, 230, 71);
+}
+
+.error {
+  background-color: rgb(184, 25, 25);
+  color: #fff;
+  padding: 10px;
+  border: 2px solid rgb(56, 8, 48);
 }

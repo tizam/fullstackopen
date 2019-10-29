@@ -13,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [message, setMessage] = useState(null);
+  const [msgClass, setMsgClass] = useState("");
 
   // fetch data from server
   useEffect(() => {
@@ -62,13 +63,24 @@ const App = () => {
               persons.map(p => (p.id !== duplicate.id ? p : updatedPerson))
             );
             setMessage(`Updated ${res.name}`);
+            setMsgClass("success");
             setTimeout(() => {
               setMessage(null);
-            }, 3000);
+              setMsgClass("");
+            }, 5000);
             setNewName("");
             setNewNumber("");
           })
-          .catch(err => console.log(err));
+          .catch(err => {
+            setMessage(
+              `information of ${duplicate.name} has already been removed from the server`
+            );
+            setMsgClass("error");
+            setTimeout(() => {
+              setMessage(null);
+              setMsgClass("");
+            }, 5000);
+          });
       }
     } else {
       // add new person to db
@@ -78,9 +90,11 @@ const App = () => {
         .then(res => {
           setPersons([...persons, res]);
           setMessage(`Added ${res.name}`);
+          setMsgClass("success");
           setTimeout(() => {
             setMessage(null);
-          }, 3000);
+            setMsgClass("");
+          }, 5000);
         })
         .catch(err => console.log(err));
       setNewName("");
@@ -100,7 +114,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} msgClass={msgClass} />
       <Filter filter={filter} handleFilter={handleFilter} />
       <h2>Add New</h2>
       <PersonForm
